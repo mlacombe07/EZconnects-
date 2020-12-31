@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="masthead">
+            <div class="container">
+                <span class="masthead-subheading">Login </span><br>
+                <hr>
+
+    
+                    <!--Button trigger modal -->
+                    <button type="button" class="btn btn-purple" data-toggle="modal" data-target="#BusinessLogin">
+                      Business Login
+                    </button>
+
+                    <button type="button" class="btn btn-purple" data-toggle="modal" data-target="#InfluencerLogin">
+                     Influencer Login
+                    </button>
+                    
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                    <ul class= "flashes" style="list-style-type:none;">
+                                        {% for message in messages %}
+                                            <li style= "color:red;">*{{ message }}*</li>
+                                        {% endfor %} 
+                                    </ul>     
+                                 {% endif %}
+                            {% endwith %}
+                    
+                     <!--Modal Business-->
+                    <div class="modal fade" id="BusinessLogin" tabindex="-1" role="dialog" aria-labelledby="BusinessLogin" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <form action="/user_login" method="POST">
+                            <div class="modal-content">
+                                <div class="modal-title">
+                                    <h3>Business Login <span class="modal-title"></span></h3>
+                                </div>
+                                <div class="modal-body">
+
+                                    <input type="text" class="form-control"name="username" placeholder="Username" required><br>
+                                    <input type="password" class="form-control"name="password" placeholder="Password" required><br>
+                                    <input type="hidden" class="form-control"name="role" value="business">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-purple" name= "login" placeholder="Login">Login</button>
+                              </div>
+                            </div>
+                        </form>
+                      </div>
+                    </div>
+
+                     <!--Modal Influencer -->
+                    <div class="modal fade" id="InfluencerLogin" tabindex="-1" role="dialog" aria-labelledby="InfluencerLogin" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <form action="/user_login" method="POST">
+                            <div class="modal-content">
+                                <div class="modal-title">
+                                    <h3>Influencer Login<span class="badge badge-secondary"></span></h3>
+                                </div>
+                                <div class="modal-body">
+
+                                    <input type="text" class="form-control"name="username" placeholder="Username" required><br>
+                                    <input type="password" class="form-control"name="password" placeholder="Password" required><br>
+                                    <input type="hidden" class="form-control"name="role" value="influencer">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-purple" name= "login" placeholder="Login">Login</button>
+                              </div>
+                            </div>
+                        </form>
+                      </div>
+                    </div>
+                
+
+                    <hr>
+    </header>
+    
+    
+{% endblock %}
+
+
+
+
+
+   

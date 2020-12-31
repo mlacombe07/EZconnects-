@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<link href="https://fonts.googleapis.com/dashboard.css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+<body>
+  {% if current_user.role == "business" %}
+    <!-- Header -->
+    <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 600px; background-image: url(https://www.alyce.com/wp-content/uploads/2019/08/REAL_Relatable_Hero.png); background-size: cover; background-position: center top;">
+      <div></div>
+
+
+      <!-- Mask -->
+      <span class="mask bg-gradient-default opacity-8"></span>
+      <!-- Header container -->
+      <div class="container-fluid d-flex align-items-center">
+        <div class="row">
+          <div class="col-lg-7 col-md-10">
+
+            <h2 class="display-2 text-white text-center"><b> Welcome {{ current_user.business_name }} </b> </h2>
+            <p class="text-white mt-0 mb-5 text-center">This is your profile page.</p> 
+
+  {% else %}
+    <!-- Header -->
+    <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 600px; background-image: url(/static/images/profile-cover.jpg); background-size: cover; background-position: center top;">
+      <div></div>
+
+
+      <!-- Mask -->
+      <span class="mask bg-gradient-default opacity-8"></span>
+      <!-- Header container -->
+      <div class="container-fluid d-flex align-items-center">
+        <div class="row">
+          <div class="col-lg-7 col-md-10">
+
+            <h1 class="display-2 text-white">Hello {{ current_user.fname }}</h1>
+
+          {% endif %}
+
+          </div>
+        </div>
+      </div>
+        <div style="margin-right: 5px; margin-top: 508px; margin-bottom: 5px;">
+          <a href="/logout" class="btn btn-purple" style="width: 126px; height: 39px;">Logout</a>
+        </div>
+    </div>
+
+    {% include "dashboards/" + current_user.role + ".html" %}
+
+</body>
+
+{% endblock content %}

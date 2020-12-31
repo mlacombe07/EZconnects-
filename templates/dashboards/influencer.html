@@ -1,0 +1,102 @@
+
+{% block content %}
+
+    <!-- Page content -->
+    <div class="container-fluid mt--7">
+      <div class="row">
+        <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+          <div class="card card-profile shadow">
+            <div class="row justify-content-center">
+              <div class="col-lg-3 order-lg-2">
+                <div class="card-profile-image">
+                </div>
+              </div>
+            </div>
+            <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+              <div class="d-flex justify-content-between">
+                <!--<a href="#" class="btn btn-sm btn-info mr-4">Connect</a>-->
+              </div>
+            </div>
+            <div class="card-body pt-0 pt-md-4">
+              <div class="text-center">
+                <h3>
+                  {{ current_user.fname }} <span class="font-weight-light">, 27</span>
+                </h3>
+                <div class="h5 font-weight-300">
+                  <i class="ni location_pin mr-2"></i>Welcome 
+                </div>
+                <hr> 
+                <div>
+                  <i class="ni education_hat mr-2">Connected Social Medias</i>
+                  <hr>
+                  <ol>
+                    <ul>TikTok</ul>
+                    <ul>Instagram</ul>
+                    <ul>Facebook</ul>
+                    <ul>YouTube</ul>
+                    <ul>Twitch</ul>
+                  </ol>
+                </div>
+                <a href="/socialmedia">Connect More Accounts </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-8 order-xl-1">
+          <div class="card bg-light shadow">
+            <div class="card-header bg-white border-0">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h3 class="mb-0">My Claimed Promotions</h3>
+                </div>
+              </div>
+            </div>
+            {% for claimedpromotion in claimedpromotions %}
+              <div class="card-body ">
+                <div class="card" style="width: 18rem;">
+                  <img class="card-img-top" src="https://m.economictimes.com/photo/20474308.cms" alt="Card image cap">
+                  <div class="card-body">
+                    <p class="card-text">
+                      <h5> {{ claimedpromotion.promotion.name }} </h5>
+                        Region: {{ claimedpromotion.promotion.region }}  <br>
+                        Brand:  {{ claimedpromotion.promotion.brand }}  <br>
+                        Quantity:  {{ claimedpromotion.promotion.quantity }}  <br>
+                        Platform:  {{ claimedpromotion.promotion.platform }}  <br>
+                    </p>
+                  </div>
+                  <button type="button" class="btn btn-purple btn-lg center-text" disabled>Claimed</button>
+                </div>
+              <!--<form>-->
+              <!--  <h1> My Promotions</h1>-->
+              <!--   {% for claimedpromotion in claimedpromotions %}-->
+  
+              <!--      <div class="col-3" >-->
+              <!--        <div class="card "  style="width: 100%;">-->
+              <!--          <img class="card-img-top" src="{{ claimedpromotion.promotion.image }} " alt="{{ claimedpromotion.promotion.name }} ">-->
+              <!--          <div class="card-body">-->
+              <!--            <h5 class="card-title">{{ claimedpromotion.promotion.platform }} </h5>-->
+              <!--            <p class="card-text">-->
+              <!--                <h5> {{ claimedpromotion.promotion.name }} </h5>-->
+              <!--                Region: {{ claimedpromotion.promotion.region }}  <br>-->
+              <!--                Brand:  {{ claimedpromotions.promotion.brand }}  <br>-->
+              <!--                Quantity:  {{ claimedpromotion.promotion.quantity }}  <br>-->
+              <!--                Platform:  {{ claimedpromotion.promotion.platform }}  <br>-->
+              <!--            </p>-->
+              <!--          </div>-->
+              <!--        </div>-->
+              <!--      </div>-->
+              <!--   {% endfor %}-->
+              <!--</form>-->
+             
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}

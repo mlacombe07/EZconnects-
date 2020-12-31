@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <header class="masthead">
+            <div class="container">
+                <span class="masthead-subheading">Register</span><br>
+                <hr>
+                
+
+                   <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-purple" data-toggle="modal" data-target="#addBusiness">
+                      Business Registration 
+                    </button>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-purple" data-toggle="modal" data-target="#addInfluencer">
+                     Influencer Registration 
+                    </button>
+                    
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                    <ul class= "flashes" style="list-style-type:none;">
+                                        {% for message in messages %}
+                                            <li style= "color:red;">*{{ message }}*</li>
+                                        {% endfor %} 
+                                    </ul>     
+                                {% endif %}
+                            {% endwith %}
+                    
+                    <!-- Modal Business-->
+                    <div class="modal fade" id="addBusiness" tabindex="-1" role="dialog" aria-labelledby="addBusiness" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <form action="/users/create" method="POST">
+                           <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addBusiness">Welcome Business</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type= "email" class="form-control"name= "email" placeholder="Business Email" required><br>
+                                    <input type= "text" class="form-control"name= "username" placeholder="Username" required><br>
+                                    <input type= "password" class="form-control"name= "password" placeholder="Password" required><br>
+                                    <input type="text"class="form-control" name= "business_name" placeholder="Business Name" required><br>
+                                    <textarea class="form-control"name= "bio" placeholder="Company Description"required></textarea><br>
+                                    <input type= "text" class="form-control"name= "industry" placeholder="Industry" required><br>
+                                    <input type= "text" class="form-control"name= "state" placeholder="State" required><br>
+                                    <input type= "text" class="form-control"name= "city" placeholder="City" required><br>
+                                    <input type= "hidden" class="form-control"name= "role" value="business"><br>                                     
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-purple" href="/login">Create Account</button>
+                              </div>
+                            </div>
+                        </form>
+                      </div>
+                    </div>
+                    
+                    <!-- Modal Influencer -->
+                    <div class="modal fade" id="addInfluencer" tabindex="-1" role="dialog" aria-labelledby="addInfluencer" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <form action="/users/create" method="POST">
+                           <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addInfluencer">Welcome Influencer</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                      
+                                    <input type= "text" class="form-control"name= "fname" placeholder="First Name" required><br>
+                                    <input type= "text"class="form-control" name= "lname" placeholder="Last Name" required><br>
+                                    <input type="date" class="form-control"name= "date_of_birth" placeholder="Date of Birth" required><br>
+                                    <textarea class="form-control"name= "bio" placeholder="Bio"></textarea><br>
+                                    <input type="text" class="form-control" name="state" placeholder="State" required><br>
+                                    <input type= "text" class="form-control"name= "city" placeholder="City" required><br>
+                                    <input type= "email" class="form-control"name= "email" placeholder="Email" required><br>
+                                    <input type= "text" class="form-control"name= "username" placeholder="Username" required><br>
+                                    <input type= "password" class="form-control"name= "password" placeholder="Password" required><br>
+                                    <input type= "hidden" class="form-control"name= "role" value="influencer"><br>
+                                                                          
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-purple" href="/login">Create Account</button>
+                              </div>
+                            </div>
+                        </form>
+                      </div>
+                    </div>
+                            
+                    <hr>                   
+    </header>
+        
+        
+{% endblock %}
+
+
+
+
+
+
+
+  <!--<form action = "/influencers/create" method= "Post">-->
+  <!--                                                  <input type= "text" name= "fname" placeholder="First Name"><br>-->
+  <!--                                                  <input type= "text" name= "lname" placeholder="Last Name"><br>-->
+  <!--                                                  <input type="date" name= "date_of_birth" placeholder="Date of Birth"><br>-->
+  <!--                                                  <textarea name= "bio"></textarea><br>-->
+  <!--                                                  <input type= "text" name= "username" placeholder="Username"><br>-->
+  <!--                                                  <input type= "text" name= "password" placeholder="Password"><br>-->
+  <!--                                                  <input type= "Submit" name= "Register"><br>-->
+            
+  <!--                                              </form>-->

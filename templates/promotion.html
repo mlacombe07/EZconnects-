@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+          <section class="page-section bg-light" id="portfolio">
+            <div class="container">
+                <div class="text-center">
+                  {% if current_user.role == 'business' %}
+                    <h2 class="section-heading text-uppercase"> {{ current_user.business_name }} Available Promotions </h2>
+                  {% else %}
+                    <h2 class="section-heading text-uppercase"> {{ current_user.username }}'s Available Promotions </h2>
+                  {% endif %}
+                    <h3 class="section-subheading text-muted">Here are all your promotions</h3>
+
+                    <div class="container-fluid web-body " id="promocard">
+                        <div class="row">
+                            <!--<div class="col-12">-->
+                            <!--    <h3><b> {{ current_user.business_name }} </b> </h3>-->
+                            <!--</div>-->
+                        </div>
+                        <div class="row">
+                            {% if current_user.role == 'business' %}
+                              {% if promotions | length > 0 %}
+
+                                  <!--Loop -->
+                                  <div class="col-3">
+                                      <button class="card " id="Promotions" style="width: 100%;" data-toggle="modal" data-target="#addpromotions">
+                                        <img class="card-img-top" src="https://m.economictimes.com/photo/20474308.cms" alt="">
+                                        <div class="card-body">
+                                          <h5 class="card-title">Create Promotion Here! </h5>
+                                          <p class="card-text">
+                                              <h5>{{ promotions.name }} {{ promotions.platform }} </h5>
+                                              Region: ...  <br>
+                                              Brand: ... <br>
+                                              Quantity: ... <br>
+                                              Platform: ... <br>
+                                          </p>
+                                        </div>
+                                      </button>
+                                  </div>
+                                  {% for promotion in promotions %}
+
+                                    <div class="col-3" >
+                                      <div class="card "  style="width: 100%;">
+                                        <img class="card-img-top" src="{{ promotion.image }} " alt="{{ promotion.name }} ">
+                                        <div class="card-body">
+                                          <h5 class="card-title">{{ promotion.platform }} </h5>
+                                          <p class="card-text">
+                                              <h5> {{ promotion.name }} </h5>
+                                              Region: {{ promotion.region }}  <br>
+                                              Brand:  {{ promotion.brand }}  <br>
+                                              Quantity:  {{ promotion.quantity }}  <br>
+                                              Platform:  {{ promotion.platform }}  <br>
+                                          </p>
+                                          <!--<a href="#" class="btn btn-info">Edit</a>-->
+
+                                          <a href="/promotions/{{ promotion.id }}/delete" data-method="delete" class="btn btn-danger">Delete</a>
+
+                                          <a href="/promotions/{{ promotions.id }}/edit" data-method="submit" data-toggle="modal" class="btn btn-primary" data-target="#editpromotions{{ promotion.id }}">Edit</a>
+
+                                                   <!-- Modal Edit Promotion -->
+                                            <div class="modal fade" id="editpromotions{{ promotion.id }}" tabindex="-1" role="dialog" aria-labelledby="editpromotions" aria-hidden="true">
+                                              <div class="modal-dialog" role="document">
+                                                  <form action="/promotions/{{ promotion.id }}/edit" method="Post">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="editpromotions{{ promotion.id }}">Edit Promotion</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <label>Image</label>
+                                                        <input type="text" class="form-control" name="image" value="{{ promotion.image }}" ><br>
+                                                        <label>Name</label>
+                                                        <input type="text" class="form-control" name="name" value="{{ promotion.name }}" ><br>
+                                                        <label>Description</label>
+                                                        <input type="text" class="form-control" name="description" value="{{ promotion.description }}" ><br>
+                                                        <label>Region</label>
+                                                        <input type="text" class="form-control" name="region" value="{{ promotion.region }}" ><br>
+                                                        <label>Date Range </label>
+                                                        <input type="date" class="form-control" name="date_range" value="{{ promotion.date_range }}" ><br>
+                                                        <label>Brand</label>
+                                                        <input type="text" class="form-control" name="brand" value="{{ promotion.brand }}" ><br>
+                                                        <label>Platform</label>
+                                                            <select type="text" class="form-control" placeholder="Platform" id="platform" name="platform">
+                                                              <option value="Platform">{{ promotion.platform }}</option>
+                                                              <option value="Instagram">Instagram</option>
+                                                              <option value="Facebook">Facebook</option>
+                                                              <option value="TikTok">TikTok</option>
+                                                              <option value="Youtube">Youtube</option>
+                                                              <option value="Twitch">Twitch</option>
+                                                            </select><br>
+                                                       <label>Quantity</label>
+                                                        <input type="text" class="form-control" name="quantity" value="{{ promotion.quantity }}" min="1" ><br>
+
+
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="reset" class="btn btn-secondary" data-dismiss="modal">Clear </button>
+                                                        <button type="submit" class="btn btn-warning">Edit</button>
+                                                      </div>
+                                                    </div>
+                                                  </form>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    {% endfor %}
+                                  {% else %}
+                                    <div class=" col-12 center_text">
+                                            <h3> No promotions at the Moment </h3>
+                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addpromotions">
+                                            Add promotions
+                                        </button>
+                                      </div>
+                                  {% endif %}
+                                {% else %}
+                                  {% for promotion in allPromotions %}
+                                      <div class="col-3" >
+                                        <div class="card "  style="width: 100%;">
+                                          <img class="card-img-top" src="{{ promotion.image }} " alt="{{ promotion.name }} ">
+                                          <div class="card-body">
+                                            <h5 class="card-title">{{ promotion.platform }} </h5>
+                                            <p class="card-text">
+                                              <h5> {{ promotion.name }} </h5>
+                                              Region: {{ promotion.region }}  <br>
+                                              Brand:  {{ promotion.brand }}  <br>
+                                              Quantity:  {{ promotion.quantity }}  <br>
+                                              Platform:  {{ promotion.platform }}  <br>
+                                            </p>
+                                          <form action="/claimedpromotion/{{ promotion.id }}/create", method='POST'>
+                                            <input type="hidden" class="form-control" name="id" value="{{ promotion.id }}" >
+                                            <button type="submit" class="btn btn-danger">Claim Promotion</button>
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {% endfor %}
+                                  {% endif %}
+
+                                 <!--Modal -->
+                                <div class="modal fade" id="addpromotions" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                      <form action="/promotions/create" method="Post">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Create promotions</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+
+                                            <input type="text" class="form-control" name="image" placeholder="Place Image HERE" required><br>
+                                            <input type="text" class="form-control" name="name" placeholder="Promotions Name" required><br>
+                                            <input type="text" class="form-control" name="description" placeholder="Promo Description" required><br>
+                                            <input type="text" class="form-control" name="region" placeholder="Region" required><br>
+                                            <input type="date" class="form-control" name="date_range" placeholder="Promotion Deadline" required><br>
+                                            <input type="text" class="form-control" name="brand" placeholder="Brand" required><br>
+                                                <select type="text" class="form-control" placeholder="Platform" id="platform" name="platform">
+                                                  <option value="Platform">Platform</option>
+                                                  <option value="Instagram">Instagram</option>
+                                                  <option value="Facebook">Facebook</option>
+                                                  <option value="TikTok">TikTok</option>
+                                                  <option value="Youtube">Youtube</option>
+                                                  <option value="Twitch">Twitch</option>
+                                                </select><br>
+                                            <input type="text" class="form-control" name="quantity" placeholder="Quantity" required min="1" ><br>
+
+
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="reset" class="btn btn-secondary" data-dismiss="modal">Clear </button>
+                                            <button type="submit" class="btn btn-info">Add Promo </button>
+                                          </div>
+                                        </div>
+                                      </form>
+                                  </div>
+                                </div>
+
+                            </div>
+                            <hr>
+                        </div>
+
+                    </div>
+                </div>
+        </section>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

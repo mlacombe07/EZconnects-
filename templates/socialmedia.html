@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+        <!-- Portfolio Grid-->
+        <section class="page-section bg-light" id="portfolio">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="section-heading text-uppercase"> {{ current_user.fname }}'s Social Media</h2>
+                    <h3 class="section-subheading text-muted">Here are all your Social Media Accounts</h3>
+
+
+                    <div class="grid-container">
+                    {% if socialmedias != None %}
+                        {% for socialmedia in socialmedias %}
+                                <div class="grid-item">
+                                  <a href="#" class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" data-toggle="modal" data-target="#{{socialmedia["username"]}}-{{socialmedia["platform"]}}">
+                                    <h1 style='text-align:center;'>PLATFORM</h1>
+                                    <h2>{{socialmedia.platform}}</h2><br>
+                                    <h3>{{socialmedia.username}}</h3><br>
+                                  </a>
+                                  </div>
+                                  
+                                  {% endfor %}
+                                  
+                                  </div>
+                              
+                        {% for socialmedia in socialmedias %}      
+                        <!-- Modal -->
+                            <div class="modal fade" id="{{socialmedia["username"]}}-{{socialmedia["platform"]}}" tabindex="-1" role="dialog" aria-labelledby="{{socialmedia["username"]}}-{{socialmedia["platform"]}}1" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="{{socialmedia["username"]}}-{{socialmedia["platform"]}}1">{{socialmedia.platform}} Account Info</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                            <div class="modal-body">
+                                <h1 style='text-align:center;'>PLATFORM</h1><br>
+                                <h2>{{socialmedia.platform}}</h2><br>
+                                <h1 style='text-align:center;'>FOLLOWERS</h1><br>
+                                <h2>{{socialmedia.followers}}</h2><br><br>
+                                <h1 style='text-align:center;'>ENGAGEMENT</h1><br>
+                                <h2>{{socialmedia.engagement_percent}}%</h2><br>
+                                <h1 style='text-align:center;'>BRAND</h1><br>
+                                <h2>{{socialmedia.brand}}</h2><br>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <form action="/socialmedia/{{ socialmedia.id }}/delete", method='POST'>
+                                    <input type="hidden" class="form-control" name="id" value="{{ socialmedia.id }}" >
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                                </div>
+                              </div>
+                            </div>
+
+
+                        {% endfor %}
+                        
+
+                        <div style="margin-right: 5px; margin-top: 10px; margin-bottom: 5px;">
+                          <a href="#" class="btn btn-purple" style="width: 126px; height: 60px;" data-toggle="modal" data-target="#addSocialMedia">Add Account</a>
+                        </div>
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                    <ul class= "flashes" style="list-style-type:none;">
+                                        {% for message in messages %}
+                                            <li style= "color:red;">*{{ message }}*</li>
+                                        {% endfor %} 
+                                        </ul>     
+                                 {% endif %}
+                            {% endwith %}
+                             <!-- Modal -->
+                        <div class="modal fade" id="addSocialMedia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+    
+                           <form action="/socialmedia/create", method='POST'>
+                               <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Add Social Media</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+    
+                                  <input type='text' class="form-control"name='platform' placeholder='Choose A Platform' required ><br>
+                                  <input type='number' class="form-control"name='followers' placeholder='Follower Amount' required><br>
+                                  <input type='number' class="form-control"name='engagement_percent' placeholder='Engagement Percentage' required><br>
+                                  <input type='text'class="form-control" name='brand' placeholder='Choose a Brand' required><br>
+                                  <input type='text' class="form-control"name='username' placeholder='Username' required ><br>
+                                  
+    
+    
+                              </div>
+                              <div class="modal-footer">
+                                <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Add Account</button>
+                              </div>
+                            </div>
+                           </form>
+                          </div>
+                        </div>
+
+                    {% else %}
+
+                    <div style="margin-right: 5px; margin-top: 10px; margin-bottom: 5px;">
+                      <a href="#" class="btn btn-purple" style="width: 126px; height: 60px;" data-toggle="modal" data-target="#addSocialMedia">Add Account</a>
+                    </div>
+                         <!-- Modal -->
+                    <div class="modal fade" id="addSocialMedia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+
+                       <form action="/socialmedia/create", method='POST'>
+                           <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Add Promotion</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+
+                              <input type='text' name='platform' placeholder='Choose A Platform'><br>
+                              <input type='number' name='followers' placeholder='Follower Amount'><br>
+                              <input type='number' name='engagement_percent' placeholder='Engagement Percentage'><br>
+                              <input type='text' name='brand' placeholder='Choose a Brand'><br>
+                              <input type='text' name='username' placeholder='Username'><br>
+
+
+                          </div>
+                          <div class="modal-footer">
+                            <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add Account</button>
+                          </div>
+                        </div>
+                       </form>
+                      </div>
+                    </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
+        </section>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+     <!--<div class="row">-->
+                <!--    <div class="col-lg-4 col-sm-6 mb-4">-->
+                <!--        <div class="portfolio-item">-->
+                <!--            <a class="portfolio-link" data-toggle="modal" href="/dashboard">-->
+                <!--                <div class="portfolio-hover">-->
+                <!--                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>-->
+                <!--                </div>-->
+                <!--                <img class="img-fluid" src="static/images/portfolio/01-thumbnail.jpg" alt="" />-->
+                <!--            </a>-->
+                <!--            <div class="portfolio-caption">-->
+                <!--                <div class="portfolio-caption-heading">Threads</div>-->
+                <!--                <div class="portfolio-caption-subheading text-muted">Illustration</div>-->
+                <!--            </div>-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--    <div class="col-lg-4 col-sm-6 mb-4">-->
+                <!--        <div class="portfolio-item">-->
+                <!--            <a class="portfolio-link" data-toggle="modal" href="#portfolioModal2">-->
+                <!--                <div class="portfolio-hover">-->
+                <!--                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>-->
+                <!--                </div>-->
+                <!--                <img class="img-fluid" src="static/images/portfolio/02-thumbnail.jpg" alt="" />-->
+                <!--            </a>-->
+                <!--            <div class="portfolio-caption">-->
+                <!--                <div class="portfolio-caption-heading">Explore</div>-->
+                <!--                <div class="portfolio-caption-subheading text-muted">Graphic Design</div>-->
+                <!--            </div>-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--    <div class="col-lg-4 col-sm-6 mb-4">-->
+                <!--        <div class="portfolio-item">-->
+                <!--            <a class="portfolio-link" data-toggle="modal" href="#portfolioModal3">-->
+                <!--                <div class="portfolio-hover">-->
+                <!--                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>-->
+                <!--                </div>-->
+                <!--                <img class="img-fluid" src="static/images/portfolio/03-thumbnail.jpg" alt="" />-->
+                <!--            </a>-->
+                <!--            <div class="portfolio-caption">-->
+                <!--                <div class="portfolio-caption-heading">Finish</div>-->
+                <!--                <div class="portfolio-caption-subheading text-muted">Identity</div>-->
+                <!--            </div>-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--    <div class="col-lg-4 col-sm-6 mb-4 mb-lg-0">-->
+                <!--        <div class="portfolio-item">-->
+                <!--            <a class="portfolio-link" data-toggle="modal" href="#portfolioModal4">-->
+                <!--                <div class="portfolio-hover">-->
+                <!--                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>-->
+                <!--                </div>-->
+                <!--                <img class="img-fluid" src="static/images/portfolio/04-thumbnail.jpg" alt="" />-->
+                <!--            </a>-->
+                <!--            <div class="portfolio-caption">-->
+                <!--                <div class="portfolio-caption-heading">Lines</div>-->
+                <!--                <div class="portfolio-caption-subheading text-muted">Branding</div>-->
+                <!--            </div>-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--    <div class="col-lg-4 col-sm-6 mb-4 mb-sm-0">-->
+                <!--        <div class="portfolio-item">-->
+                <!--            <a class="portfolio-link" data-toggle="modal" href="#portfolioModal5">-->
+                <!--                <div class="portfolio-hover">-->
+                <!--                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>-->
+                <!--                </div>-->
+                <!--                <img class="img-fluid" src="static/images/portfolio/05-thumbnail.jpg" alt="" />-->
+                <!--            </a>-->
+                <!--            <div class="portfolio-caption">-->
+                <!--                <div class="portfolio-caption-heading">Southwest</div>-->
+                <!--                <div class="portfolio-caption-subheading text-muted">Website Design</div>-->
+                <!--            </div>-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--    <div class="col-lg-4 col-sm-6">-->
+                <!--        <div class="portfolio-item">-->
+                <!--            <a class="portfolio-link" data-toggle="modal" href="#portfolioModal6">-->
+                <!--                <div class="portfolio-hover">-->
+                <!--                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>-->
+                <!--                </div>-->
+                <!--                <img class="img-fluid" src="static/images/portfolio/06-thumbnail.jpg" alt="" />-->
+                <!--            </a>-->
+                <!--            <div class="portfolio-caption">-->
+                <!--                <div class="portfolio-caption-heading">Window</div>-->
+                <!--                <div class="portfolio-caption-subheading text-muted">Photography</div>-->
+                <!--            </div>-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--</div>-->

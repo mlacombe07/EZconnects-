@@ -1,0 +1,99 @@
+
+
+{% block content %}
+
+<link href="https://fonts.googleapis.com/dashboard.css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+<body>
+  <hr> 
+     <!--Page content -->
+    <div class="container-fluid mt--7">
+      <div class="row">
+        <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+          <div class="card card-profile shadow">
+            <div class="row justify-content-center">
+              <div class="col-lg-3 order-lg-2">
+                <div class="card-profile-image">
+                </div>
+              </div>
+            </div>
+            <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+              <!--<div class="d-flex justify-content-between">-->
+              <!--  <a href="/promotions" class="btn btn-sm btn-primary mr-4">Create Promotion </a>-->
+              <!--</div>-->
+            </div>
+            <div class="card-body pt-0 pt-md-4">
+              <div class="text-center">
+                <h3>
+                 {{ current_user.business_name }} <span class="font-weight-light">
+                   <br> 
+                   {{ current_user.city }}</span>
+                </h3>
+               
+                <hr class="my-4">
+                <p>Business Name: {{ current_user.business_name }}</p>
+                <p>City: {{ current_user.region }} </p>
+                <p>Business Industry: {{ current_user.industry }}</p>
+                
+                <a href="/users/{{ current_user.id }}/edit" data-method="submit" class="btn btn-primary" data-toggle="modal" data-target="#editbusiness{{ current_user.id }}">Edit</a>
+                
+                <!-- Modal EditBusiness -->
+                  <div class="modal fade" id="editbusiness{{ current_user.id }}" tabindex="-1" role="dialog" aria-labelledby="editbusiness" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <form action="/users/{{ current_user.id }}/edit" method="Post">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="editbusiness{{ current_user.id }}">Edit Business</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <lable>Industry</lable>
+                            <input type="text" class="form-control" name="name" value="{{ current_user.industry }}" ><br>
+                            <lable>Business Name</lable>
+                            <input type="text" class="form-control" name="description" value="{{ current_user.business_name }}" ><br>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="reset" class="btn btn-secondary" data-dismiss="modal">Clear </button>
+                            <button type="submit" class="btn btn-warning">Edit</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-8 order-xl-1">
+          <div class="card bg-light shadow">
+            <div class="card-header bg-white border-0">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h3 class="mb-0">Promotions Created  </h3>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+               <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://m.economictimes.com/photo/20474308.cms" alt="Card image cap">
+                <div class="card-body">
+                  <p class="card-text">
+                    <h5> {{ current_user.promotion.platform }} </h5>
+                      Region: {{ current_user.promotion.platform }}  <br>
+                      Brand:  {{ current_user.promotion.platform }}  <br>
+                      Quantity:  {{ current_user.promotion.platform }}  <br>
+                      Platform:  {{ current_user.promotion.platform }}  <br>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
