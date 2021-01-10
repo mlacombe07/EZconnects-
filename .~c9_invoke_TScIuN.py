@@ -29,12 +29,6 @@ assets.register('css_all', css)
 
 # MODELS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-claimed_promotion = db.Table('claimed_promotion',
-    db.Column('promotion_id', db.Integer, db.ForeignKey('promotion.id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
-)
-
-
 class User( UserMixin, db.Model ):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100))
@@ -49,13 +43,14 @@ class User( UserMixin, db.Model ):
     city = db.Column(db.String(50))
     date_of_birth = db.Column(db.String(10))
     role = db.Column(db.String(100))
-
-
+    
+    
     # relationships
 
     social_media = db.relationship( 'SocialMedia', backref='user' )
-    promotion = db.relationship( 'Promotion', backref = 'promotion_user')
-    claimed_promotion = db.relationship( 'Promotion', secondary=claimed_promotion, backref=db.backref('user', lazy='joined'))
+    claimed_promotion = db.relationship( "ClaimedPromotion", backref="user" )
+    promotion = db.relationship( "Promotion", backref="user" )
+
     # initializers
 
     def __init__(self, email, username, password, fname, lname, business_name, industry, bio, state, city, date_of_birth, role):
@@ -96,11 +91,12 @@ class Promotion( db.Model ):
 
     # relationships
 
+    claimed_promotion = db.relationship( "ClaimedPromotion", backref="promotion" )
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     # initializers
 
-    def __init__(self, name, image, description, region, date_range, brand, platform, quantity, promotion_user):
+    def __init__(self, name, image, description, region, date_range, brand, platform, quantity, user):
         self.name = name
         self.image = image
         self.description = description
@@ -109,7 +105,7 @@ class Promotion( db.Model ):
         self.brand = brand
         self.platform = platform
         self.quantity = quantity
-        self.promotion_user = promotion_user
+        self.user = user
 
 
 class SocialMedia( db.Model ):
@@ -136,7 +132,19 @@ class SocialMedia( db.Model ):
 
 
 
+class ClaimedPromotion( db.Model ):
+    id = db.Column(db.Integer, primary_key=True)
 
+    #relationships
+
+    promotion_id = db.Column(db.Integer, db.ForeignKey('promotion.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    # initializers
+
+    def __init__(self, promotion, user):
+        self.promotion = promotion
+        self.user = user
 
 
 # Controllers
@@ -145,7 +153,7 @@ class SocialMedia( db.Model ):
 
 @app.route("/")
 def home():
-    return render_template("indextest.html")
+    return render_template("index.html")
 
     # Register/Login/Logout Routes
 
@@ -165,28 +173,26 @@ def user_login():
         username = request.form['username']
         password = request.form['password']
         role = request.form['role']
-
+    
         user = User.query.filter_by(username = username, password = password, role = role).first()
-
+    
         if role == 'influencer':
             if not user:
-                flash("Incorect username or password, please verify and try again.")
                 return redirect('/user_login')
 
-            else:
+            else: 
                 login_user(user)
                 return redirect('/dashboard')
-
+        
         else:
             if not user:
-                flash("Incorect username or password, please verify and try again.")
                 return redirect('/user_login')
 
-            else:
+            else: 
                 login_user(user)
                 return redirect('/dashboard')
-
-
+            
+        
     else:
         return render_template("login.html")
 
@@ -195,9 +201,7 @@ def user_login():
 def logout():
     logout_user()
 
-
-    flash("You have successfully logged out!")
-    return redirect('/user_login')
+    return render_template("index.html")
 
 @app.route("/dashboard")
 @login_required
@@ -229,28 +233,13 @@ def create_user():
     date_of_birth = request.form.get('date_of_birth', "")
     role = request.form.get('role', "")
 
-    users = User.query.filter_by(username = username).all()
 
-    is_unique = True
 
-    for user in users:
-        if username != user.username:
-            is_unique = True
-        else:
-            is_unique = False
-            break
+    newUser = User(email, username, password, fname, lname, business_name, industry, bio, state, city, date_of_birth, role)
+    db.session.add(newUser)
+    db.session.commit()
 
-    if is_unique == True:
-
-        newUser = User(email, username, password, fname, lname, business_name, industry, bio, state, city, date_of_birth, role)
-        db.session.add(newUser)
-        db.session.commit()
-
-        return redirect("/user_login")
-
-    else:
-        flash("This username is already in use, please choose a different username.")
-        return redirect("/register")
+    return redirect("/user_login")
 
         # Read
 @app.route("/users/<id>")
@@ -261,16 +250,14 @@ def get_user(id):
         # Update
 @app.route("/users/<id>/edit", methods=["GET", "POST"])
 def edit_user(id):
+    user = User.query.get( int(id) )
 
-
-    if request.method == "POST":
-        user = User.query.get( int(id) )
+    if request == "POST":
         user.password = request.form.get('password', "")
         user.bio = request.form.get('bio', "")
         user.state = request.form.get('state', "")
         user.city = request.form.get('city', "")
         db.session.commit()
-
         return render_template("dashboard.html", user = user)
     else:
         return render_template("edit_user.html", user = user)
@@ -287,7 +274,7 @@ def delete_user(id):
     # CRUDI Promotion
 
 
-@app.route("/promotions")
+@app.route("/promotions") 
 def all_promotions():
     promotions = current_user.promotion
     allPromotions = Promotion.query.all()
@@ -318,24 +305,21 @@ def get_promotion(id):
 
 @app.route("/promotions/<id>/edit", methods=["GET", "POST"])
 def edit_promotion(id):
+    promotion = Promotion.query.get( int(id) )
 
-    if request.method == "POST":
-        promotion = Promotion.query.get( int(id) )
-
+    if request == "Post":
         promotion.name = request.form.get('name', "")
         promotion.image = request.form.get('image', "")
         promotion.description= request.form.get('description', "")
         promotion.region = request.form.get('region', "")
         promotion.date_range = request.form.get('date_range', "")
-        promotion.brand= request.form.get('brand', "")
+        promotion.brand= request.form.get('description', "")
         promotion.platform = request.form.get('platform', "")
         promotion.quantity= request.form.get('quantity', "")
-
         db.session.commit()
-
-        return redirect("/promotions")
+        return render_template("promotion.html", promotion = promotion)
     else:
-        return redirect("/promotions")
+        return render_template("edit_promotion.html", promotion = promotion)
 
 @app.route("/promotions/<id>/delete", methods=["GET"])
 def delete_promotion(id):
@@ -352,7 +336,11 @@ def delete_promotion(id):
 def all_socialmedias():
     allSocialmedias = SocialMedia.query.all()
     socialmedias = current_user.social_media
-
+    print("--------------------------")
+    print("--------------------------")
+    print("--------------------------")
+    print(socialmedias)
+    print("--------------------------")
 
     return render_template("socialmedia.html", socialmedias = socialmedias, allSocialmedias = allSocialmedias)
 
@@ -363,33 +351,33 @@ def create_Socialmedia():
     engagement_percent = request.form.get('engagement_percent', "")
     brand = request.form.get('brand', "")
     username= request.form.get('username', "")
-
+    
     #allSocialmedias = SocialMedia.query.all()
     socialmedias = SocialMedia.query.filter_by(platform = platform).filter_by(username = username).all()
-
+    
     is_unique = True
-
+    
     for socialmedia in socialmedias:
         if platform != socialmedia.platform and username != socialmedia.username:
             is_unique = True
         else:
             is_unique = False
             break
-
+            
     if is_unique == True:
         newSocialmedia = SocialMedia(platform, followers, engagement_percent, brand, username, current_user)
-
+                
         print("----------------")
         print(username)
         print("----------------")
         print(platform)
         print("----------------")
 
-
+        
         db.session.add(newSocialmedia)
         db.session.commit()
         return redirect("/socialmedia")
-
+        
     else:
         flash("This account is registered to another user, please connect a new account.")
         return redirect("/socialmedia")
@@ -427,39 +415,30 @@ def delete_socialmedia(id):
 
 @app.route("/claimedpromotion")
 def all_claimedpromotion():
-    #allclaimedpromotions = User.query.join(claimed_promotion).join(Promotion).filter
-    #((claimed_promotion.c.user_id == User.id) & (claimed_promotion.c.promotion_id == Promotion.id))
-    #claimedpromotions = claimed_promotion.query.filter_by(user = current_user)
-    claimedpromotions = claimed_promotion.query.filter_by(user_id = current_user).all()
-    return render_template("dashboard.html", claimedpromotions = claimedpromotions)
+    allclaimedpromotion = ClaimedPromotion.query.all()
+    claimedpromotions = ClaimedPromotion.query.filter_by(user = current_user)
+    return render_template("influencer.html", claimedpromotions = claimedpromotions)
 
-@app.route("/claimedpromotion/<id>/create", methods=["POST"])
-def create_claimedpromotion(id):
-
-    claimedpromotion = Promotion.query.get( int(id) )
-
-    print("-------------------------------")
-    print("-------------------------------")
-
-    print(claimedpromotion.id)
-
-    print("-------------------------------")
-
-    #newclaimedpromotion = ClaimedPromotion(promotion)
-
-    claimedpromotion.user.append(current_user)
+@app.route("/claimedpromotion/create", methods=["POST"])
+def create_claimedpromotion():
+    promotion = request.form.get("promotion", "")
+    user = request.form.get("user", "")
+    
+    
+    newclaimedpromotion = ClaimedPromotion(promotion, current_user)
+    db.session.add(newclaimedpromotion)
     db.session.commit()
     return redirect("/claimedpromotion")
 
 
 @app.route("/claimedpromotion/<id>")
 def get_claimedpromotion(id):
-    claimedpromotion = claimed_promotion.query.get( int(id) )
+    claimedpromotion = ClaimedPromotion.query.get( int(id) )
     return render_template("claimedpromotion.html", claimedpromotion = claimedpromotion)
 
 @app.route("/claimedpromotion/<id>/edit", methods=["GET", "POST"])
 def edit_claimedpromotion(id):
-    claimedpromotion = claimed_promotion.query.get( int(id) )
+    claimedpromotion = ClaimedPromotion.query.get( int(id) )
 
     if request == "POST":
 
@@ -471,7 +450,7 @@ def edit_claimedpromotion(id):
 
 @app.route("/claimedpromotion/<id>/delete", methods=["POST"])
 def delete_claimedpromotion(id):
-    claimedpromotion = claimed_promotion.query.get( int(id) )
+    claimedpromotion = ClaimedPromotion.query.get( int(id) )
     db.session.delete(claimedpromotion)
     db.session.commit()
     return redirect("/claimedpromotion")

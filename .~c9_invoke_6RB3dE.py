@@ -34,7 +34,6 @@ claimed_promotion = db.Table('claimed_promotion',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
 
-
 class User( UserMixin, db.Model ):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100))
@@ -55,7 +54,7 @@ class User( UserMixin, db.Model ):
 
     social_media = db.relationship( 'SocialMedia', backref='user' )
     promotion = db.relationship( 'Promotion', backref = 'promotion_user')
-    claimed_promotion = db.relationship( 'Promotion', secondary=claimed_promotion, backref=db.backref('user', lazy='joined'))
+    claimed_promotion = db.relationship( 'Promotion', secondary=claimed_promotion, backref=db.backref('user', lazy='dynamic'))
     # initializers
 
     def __init__(self, email, username, password, fname, lname, business_name, industry, bio, state, city, date_of_birth, role):
@@ -145,7 +144,7 @@ class SocialMedia( db.Model ):
 
 @app.route("/")
 def home():
-    return render_template("indextest.html")
+    return render_template("index.html")
 
     # Register/Login/Logout Routes
 
@@ -270,7 +269,7 @@ def edit_user(id):
         user.state = request.form.get('state', "")
         user.city = request.form.get('city', "")
         db.session.commit()
-
+        
         return render_template("dashboard.html", user = user)
     else:
         return render_template("edit_user.html", user = user)
@@ -321,7 +320,7 @@ def edit_promotion(id):
 
     if request.method == "POST":
         promotion = Promotion.query.get( int(id) )
-
+        
         promotion.name = request.form.get('name', "")
         promotion.image = request.form.get('image', "")
         promotion.description= request.form.get('description', "")
@@ -330,9 +329,9 @@ def edit_promotion(id):
         promotion.brand= request.form.get('brand', "")
         promotion.platform = request.form.get('platform', "")
         promotion.quantity= request.form.get('quantity', "")
-
+        
         db.session.commit()
-
+        
         return redirect("/promotions")
     else:
         return redirect("/promotions")
@@ -352,7 +351,11 @@ def delete_promotion(id):
 def all_socialmedias():
     allSocialmedias = SocialMedia.query.all()
     socialmedias = current_user.social_media
-
+    print("--------------------------")
+    print("--------------------------")
+    print("--------------------------")
+    print(socialmedias)
+    print("--------------------------")
 
     return render_template("socialmedia.html", socialmedias = socialmedias, allSocialmedias = allSocialmedias)
 
@@ -427,11 +430,10 @@ def delete_socialmedia(id):
 
 @app.route("/claimedpromotion")
 def all_claimedpromotion():
-    #allclaimedpromotions = User.query.join(claimed_promotion).join(Promotion).filter
-    #((claimed_promotion.c.user_id == User.id) & (claimed_promotion.c.promotion_id == Promotion.id))
+    allclaimedpromotion = claimed_promotion.query.all()
     #claimedpromotions = claimed_promotion.query.filter_by(user = current_user)
-    claimedpromotions = claimed_promotion.query.filter_by(user_id = current_user).all()
-    return render_template("dashboard.html", claimedpromotions = claimedpromotions)
+    claimedpromotions = current_user.claimed_promotion
+    return render_template("dashboard.html")
 
 @app.route("/claimedpromotion/<id>/create", methods=["POST"])
 def create_claimedpromotion(id):
