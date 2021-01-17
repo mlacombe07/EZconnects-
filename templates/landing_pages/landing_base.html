@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>EZConnects</title>
+  <link rel="icon" type="image/x-icon" href="static/images/logos/EZClogo.png" />
+
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet" type="text/css">
+
+{% assets "css_all2" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" />
+{% endassets %}
+
+
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-purple fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="/"><img src="static/images/logos/EZClogo.png" style="width:50px;" alt=""></a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          EZConnects
+          <i class="fas fa-bars m1-1">EZConnects</i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav text-uppercase ml-auto">
+          <li class="nav-item"><a class="nav-link js-scroll-trigger" href="landing_page/business">Merchants</a></li>
+          <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/">Influencers</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+              
+              {% block content %} {% endblock %}
+              
+  <!--Footer-->
+
+  <footer>
+    <div class="container">
+      <p>&copy;All Rights Reserved. Contact Us - support.team@ezconnects.biz</p>
+    </div>
+  </footer>
+
+  {% assets "js_all2" %}
+      <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+
+</body>
+
+</html>

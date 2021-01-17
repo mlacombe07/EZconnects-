@@ -19,12 +19,30 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
+
+css2 = Bundle('./css/landing_page_css/css/device-mockups.css', './css/landing_page_css/css/new-age.css',
+              './css/landing_page_css/vendor/bootstrap/bootstrap-grid.css', './css/landing_page_css/vendor/fontawesome-free/css/all.css',
+              './css/landing_page_css/vendor/simple-line-icons/css/simple-line-icons.css',
+             output='gen/landing_page.css')
+
+js2 = Bundle('./javascript/landing_page_js/javascript/landing_page.js', './javascript/landing_page_js/jquery/jquery.js',
+              './javascript/landing_page_js/jquery-easing/jquery_easing_compatibility.js',
+              './javascript/landing_page_js/js/bootstrap_bundle.js',
+             output='gen/landing_page.js')
+
+
 js = Bundle('./javascript/scripts.js',
             output='gen/script.js')
-assets.register('js_all', js)
+
+
 css = Bundle('./css/styles.css',
             output='gen/styles.css')
+
+assets.register('js_all', js,)
 assets.register('css_all', css)
+
+assets.register('css_all2', css2)
+assets.register('js_all2', js2)
 
 
 # MODELS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,6 +51,22 @@ claimed_promotion = db.Table('claimed_promotion',
     db.Column('promotion_id', db.Integer, db.ForeignKey('promotion.id')),
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
+
+
+class InfluencerEmail( db.Model ):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50))
+
+    def __init__(self, email):
+        self.email = email
+
+
+class BusinessEmail( db.Model ):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50))
+
+    def __init__(self, email):
+        self.email = email
 
 
 class User( UserMixin, db.Model ):
@@ -143,9 +177,48 @@ class SocialMedia( db.Model ):
 
     # Home Route
 
-@app.route("/")
+@app.route("/1")
 def home():
     return render_template("indextest.html")
+
+    # Landing Page Routes
+
+@app.route("/", methods=["GET", "POST"])
+def influencer_landing():
+    if request.method == "POST":
+
+        email = request.form['email']
+
+        newInfluencerEmail = InfluencerEmail(email)
+
+        db.session.add(newInfluencerEmail)
+        db.session.commit()
+
+        flash("Thank You For Joining Us, We Will Be Contacting You Very Soon!")
+        return redirect("/")
+
+    else:
+        return render_template("landing_pages/influencer.html")
+
+
+
+@app.route("/landing_page/business", methods=["GET", "POST"])
+def business_landing():
+    if request.method == "POST":
+
+        email = request.form['email']
+
+        newBusinessEmail = BusinessEmail(email)
+
+        db.session.add(newBusinessEmail)
+        db.session.commit()
+
+        flash("Thank You For Joining Us, We Will Be Contacting You Very Soon!")
+        return redirect("/landing_page/business")
+
+    return render_template("landing_pages/business.html")
+
+
 
     # Register/Login/Logout Routes
 

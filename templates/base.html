@@ -16,7 +16,7 @@
         <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
 
- {% assets "css_all" %}
+{% assets "css_all" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}" />
 {% endassets %}
 
@@ -27,6 +27,7 @@
     <!--Navigation-->
     <nav class="navbar navbar-expand-lg navbar-purple fixed-top" id="mainNav">
         <div class="container">
+
                 <a class="navbar-brand js-scroll-trigger" href="/"><img src="static/images/logos/EZClogo.png" alt="" /></a>
                 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     EZConnects
@@ -41,7 +42,7 @@
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/claimedpromotion">Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/socialmedia">Social Media</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/promotions">Promotions</a></li>
-                        
+
                         {% elif ((current_user.is_authenticated) and (current_user.role == "business")) %}
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/dashboard">Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/promotions">Promotions</a></li>
@@ -65,7 +66,7 @@
 
 
 
-        
+
         <!-- Portfolio Modals-->
         <!-- Modal 1-->
         <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">

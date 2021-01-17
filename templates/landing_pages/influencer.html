@@ -1,0 +1,61 @@
+{% extends "landing_pages/landing_base.html" %}
+
+{% block content %}
+
+
+  <header class="masthead">
+    <div class="container h-100">
+      <div class="row h-100">
+        <div class="col-md-5 my-auto">
+          <div class="header-content mx-auto">
+          <p><h1>  EZConnects </h1></p>
+          <p><h2> Influencer Marketplace </h2></p>
+            <h3 class="mb-5">
+              <h3><p>How Infuential are You? </p> </h3>
+              <h3><p>Our platform will Reward YOU (FREE PROMOTIONS) depending on your level of Social Media Influence!</p></h3>
+              <h3><p>Because You Deserve It!</p></h3>
+            </h3>
+              <div class="col-form-label-lg">
+                <label for="inputEmail">Sign Up For Early Access!</label>
+              </div>
+            <form class="form-inline" action="/", method='POST'>
+              <div class="form-group">
+                <input type="email" name="email" class="form-control" size="30" id="inputEmail" placeholder="Email Here!">
+              </div>
+              <button type="submit" class="btn" style="background-color:#5100A2; color:white;">JOIN US AT EZC!</button>
+            </form>
+          </div>
+          <br>
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class= "flashes" style="list-style-type:none;">
+                    {% for message in messages %}
+                        <li style= "color:white; margin-left:25px;">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+             {% endif %}
+          {% endwith %}
+        </div>
+        <div class="col-md-5 my-auto">
+          <div class="device-container">
+            <div class="device-mockup iphone6_plus portrait white">
+              <div class="device">
+                <div>
+                  <img src="static/images/EZCMockup.png" style="padding-top:110px;" alt="" >
+                </div>
+                <div class="screen">
+                  <!-- Demo image for screen mockup, you can put an imagelanding_page_images/ here, some HTML, an animation, video, or anything else! -->
+                  <img src="static/images/identifydemo-screen-1.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="button">
+                  <!-- You can hook the "home button" to some JavaScript events or just remove it -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+{% endblock content %}
